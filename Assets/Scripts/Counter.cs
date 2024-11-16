@@ -1,17 +1,18 @@
+using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private float _timeBetween;
 
+    public event Action<int> CounterChanged;
+    
     private int _counter;
     private Coroutine _coroutine;
     private bool _isCounterRunning;
 
-    private void Start()
+    private void OnEnable()
     {
         StartCounter();
     }
@@ -34,7 +35,7 @@ public class Counter : MonoBehaviour
             yield return new WaitForSeconds(_timeBetween);
 
             IncreaseCounter();
-            PrintCounter();
+            CounterChanged?.Invoke(_counter);
         }
     }
 
@@ -53,10 +54,5 @@ public class Counter : MonoBehaviour
     private void IncreaseCounter()
     {
         _counter++;
-    }
-    
-    private void PrintCounter()
-    {
-        _text.text = _counter.ToString();
     }
 }
