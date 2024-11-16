@@ -8,16 +8,16 @@ public class CounterView : MonoBehaviour
 
     private void OnEnable()
     {
-        _counter.CounterChanged += DisplayCounter;
+        _counter.CountChanged += DisplayCount;
     }
 
     private void OnDisable()
     {
-        _counter.CounterChanged -= DisplayCounter;
+        _counter.CountChanged -= DisplayCount;
     }
 
-    private void DisplayCounter(int counter)
+    private void DisplayCount(int count)
     {
-        _text.text = counter.ToString();
+        _text.text = count.ToString();
     }
 }

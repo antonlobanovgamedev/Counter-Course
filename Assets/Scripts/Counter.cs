@@ -4,55 +4,55 @@ using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
-    [SerializeField] private float _timeBetween;
-
-    public event Action<int> CounterChanged;
+    [SerializeField] private float _delay;
     
-    private int _counter;
+    private int _count;
     private Coroutine _coroutine;
-    private bool _isCounterRunning;
+    
+    public event Action<int> CountChanged;
 
     private void OnEnable()
     {
-        StartCounter();
+        StartCount();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (_isCounterRunning)
-                StopCounter();
+            if (_coroutine != null)
+                StopCount();
             else
-                StartCounter();
+                StartCount();
         }
     }
 
-    private IEnumerator CounterCoroutine()
+    private IEnumerator CountCoroutine()
     {
-        while (_isCounterRunning)
+        WaitForSeconds wait = new WaitForSeconds(_delay);
+        
+        while (true)
         {
-            yield return new WaitForSeconds(_timeBetween);
+            yield return wait;
 
-            IncreaseCounter();
-            CounterChanged?.Invoke(_counter);
+            IncreaseCount();
+            CountChanged?.Invoke(_count);
         }
     }
 
-    private void StartCounter()
+    private void StartCount()
     {
-        _isCounterRunning = true;
-        _coroutine = StartCoroutine(CounterCoroutine());
+        _coroutine = StartCoroutine(CountCoroutine());
     }
 
-    private void StopCounter()
+    private void StopCount()
     {
-        _isCounterRunning = false;
         StopCoroutine(_coroutine);
+        _coroutine = null;
     }
     
-    private void IncreaseCounter()
+    private void IncreaseCount()
     {
-        _counter++;
+        _count++;
     }
 }
